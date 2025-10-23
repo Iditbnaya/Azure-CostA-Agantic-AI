@@ -1,10 +1,6 @@
-# Azure Cost Management Functions - Infrastructure Deployment# Azure Cost Management Functions - Infrastructure Deployment# Azure Cost Management Functions - Infrastructure Deployment
-
-
+# Azure Cost Management Functions - Infrastructure Deployment
 
 This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
-
-
 
 ## 🏗️ **What Gets Deployed**This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.This folder contains Infrastructure as Code (IaC) templates and scripts to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
 
