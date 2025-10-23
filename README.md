@@ -197,6 +197,25 @@ When receiving a relative time range such as "last month" or "previous billing c
 
 ## 🚀 Deployment
 
+### Quick Deploy to Azure
+
+Deploy the complete Azure infrastructure with one click:
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
+<img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
+</a>
+
+**What gets deployed:**
+- Azure Function App (Python 3.11, Linux)
+- Storage Account (for function data)
+- Application Insights (monitoring)
+- Log Analytics Workspace (logging)
+- Managed Identity with required RBAC permissions
+
+After deployment, you'll need to deploy the function code using: `func azure functionapp publish [YOUR-FUNCTION-APP-NAME]`
+
+For detailed deployment options and customization, see the [deploy folder](./deploy/).
+
 ### Prerequisites
 - Azure subscription
 - Azure Functions Core Tools
