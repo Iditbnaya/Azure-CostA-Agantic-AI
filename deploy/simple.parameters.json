@@ -1,12 +1,9 @@
 {
   "functionAppName": {
-    "value": "func-costanalysis-prod-001"
-  },
-  "storageAccountName": {
-    "value": "sacostprod001"
+    "value": "YOUR-FUNCTION-APP-NAME"
   },
   "hostingPlanName": {
-    "value": "plan-costanalysis-prod"
+    "value": "YOUR-HOSTING-PLAN-NAME"
   },
   "environment": {
     "value": "prod"
