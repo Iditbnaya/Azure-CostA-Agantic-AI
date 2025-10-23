@@ -179,14 +179,7 @@
       "metadata": {
         "description": "Function App URL"
       },
-      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]"
-    },
-    "functionAppPrincipalId": {
-      "type": "string",
-      "metadata": {
-        "description": "Function App Principal ID"
-      },
-      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'full').identity.principalId]"
+      "value": "[format('https://{0}.azurewebsites.net', parameters('functionAppName'))]"
     },
     "storageAccountName": {
       "type": "string",
@@ -194,6 +187,23 @@
         "description": "Storage Account Name"
       },
       "value": "[parameters('storageAccountName')]"
+    },
+    "postDeploymentInstructions": {
+      "type": "object",
+      "metadata": {
+        "description": "Instructions for completing the deployment"
+      },
+      "value": {
+        "step1": "Deploy function code: func azure functionapp publish [functionAppName]",
+        "step2": "Get Function App Principal ID: az functionapp identity show --name [functionAppName] --resource-group [resourceGroup] --query principalId -o tsv",
+        "step3": "Configure any additional RBAC permissions if needed",
+        "functionEndpoints": {
+          "analyze": "[format('https://{0}.azurewebsites.net/api/analyze', parameters('functionAppName'))]",
+          "costAnalysis": "[format('https://{0}.azurewebsites.net/api/cost-analysis', parameters('functionAppName'))]",
+          "example": "[format('https://{0}.azurewebsites.net/api/example', parameters('functionAppName'))]",
+          "costExample": "[format('https://{0}.azurewebsites.net/api/cost-example', parameters('functionAppName'))]"
+        }
+      }
     }
   }
 }
