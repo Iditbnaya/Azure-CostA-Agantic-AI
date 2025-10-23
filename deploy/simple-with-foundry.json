@@ -327,15 +327,11 @@
     },
     "functionAppUrl": {
       "type": "string",
-      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]"
+      "value": "[format('https://{0}.azurewebsites.net', parameters('functionAppName'))]"
     },
     "functionAppResourceId": {
       "type": "string",
       "value": "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
-    },
-    "functionAppPrincipalId": {
-      "type": "string",
-      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'full').identity.principalId]"
     },
     "aiHubName": {
       "type": "string",
@@ -368,12 +364,13 @@
         "step2": "Configure AI agents in Azure AI Foundry Studio",
         "step3": "Deploy models in AI Foundry project if needed",
         "step4": "Update agent configurations with function endpoints",
+        "step5": "Get Function App Principal ID: az functionapp identity show --name [functionAppName] --resource-group [resourceGroup] --query principalId -o tsv",
         "aiStudioUrl": "[format('https://ai.azure.com/projectOverview/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.MachineLearningServices/workspaces/{2}', subscription().subscriptionId, resourceGroup().name, parameters('aiProjectName'))]",
         "functionEndpoints": {
-          "analyze": "[format('https://{0}/api/analyze', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]",
-          "costAnalysis": "[format('https://{0}/api/cost-analysis', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]",
-          "example": "[format('https://{0}/api/example', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]",
-          "costExample": "[format('https://{0}/api/cost-example', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01').defaultHostName)]"
+          "analyze": "[format('https://{0}.azurewebsites.net/api/analyze', parameters('functionAppName'))]",
+          "costAnalysis": "[format('https://{0}.azurewebsites.net/api/cost-analysis', parameters('functionAppName'))]",
+          "example": "[format('https://{0}.azurewebsites.net/api/example', parameters('functionAppName'))]",
+          "costExample": "[format('https://{0}.azurewebsites.net/api/cost-example', parameters('functionAppName'))]"
         }
       }
     }
