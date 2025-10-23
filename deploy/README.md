@@ -1,214 +1,172 @@
-# Azure Cost Management Functions - Infrastructure Deployment
-
-This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
-
-## 🏗️ **What Gets Deployed**
-
-# This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
+# Azure Infrastructure Deployment# Azure Cost Management Functions - Infrastructure Deployment
 
 
-| Resource | Purpose | Configuration |
+
+Deploy the Azure infrastructure for the Cost Management Functions application.This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
+
+
+
+## 🏗️ What Gets Deployed## 🏗️ **What Gets Deployed**
+
+
+
+| Resource | Purpose | Configuration |# This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
 
 |----------|---------|---------------|
 
-| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan |## 🏗️ **What Gets Deployed**## 
+| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan |
 
-| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 |
+| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 || Resource | Purpose | Configuration |
 
 | **App Service Plan** | Hosting plan for Function App | Consumption (Y1) or Premium (EP1-EP3) |
 
-| **Application Insights** | Monitoring and telemetry | Connected to Log Analytics |
+| **Application Insights** | Monitoring and telemetry | Connected to Log Analytics ||----------|---------|---------------|
 
-| **Log Analytics Workspace** | Centralized logging | 30-day retention || Resource | Purpose | Configuration ||
+| **Log Analytics Workspace** | Centralized logging | 30-day retention |
 
-| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader |
+| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader || **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan |## 🏗️ **What Gets Deployed**## 
 
-|----------|---------|---------------||
 
-## 📁 **Files in This Folder**
 
-| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan ||
+## 🚀 Deployment Options| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 |
 
-- `simple.json` - ARM template for Azure infrastructure
 
-- `simple.parameters.json` - Parameter values for the template| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 ||
 
-- `README.md` - This deployment guide
+### Option 1: Deploy to Azure Button| **App Service Plan** | Hosting plan for Function App | Consumption (Y1) or Premium (EP1-EP3) |
+
+
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">| **Application Insights** | Monitoring and telemetry | Connected to Log Analytics |
+
+<img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
+
+</a>| **Log Analytics Workspace** | Centralized logging | 30-day retention || Resource | Purpose | Configuration ||
+
+
+
+Click the button above to deploy directly from GitHub to your Azure subscription.| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader |
+
+
+
+### Option 2: Azure CLI|----------|---------|---------------||
+
+
+
+```bash## 📁 **Files in This Folder**
+
+# Create resource group
+
+az group create --name rg-costanalysis-prod --location "East US"| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan ||
+
+
+
+# Deploy infrastructure- `simple.json` - ARM template for Azure infrastructure
+
+az deployment group create \
+
+    --resource-group rg-costanalysis-prod \- `simple.parameters.json` - Parameter values for the template| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 ||
+
+    --template-file deploy/simple.json \
+
+    --parameters deploy/simple.parameters.json- `README.md` - This deployment guide
+
+```
 
 | **App Service Plan** | Hosting plan for Function App | Consumption (Y1) or Premium (EP1-EP3) ||
 
+## ⚙️ Customization
+
 ## 🚀 **Deployment Options**
+
+Edit `simple.parameters.json` to customize your deployment:
 
 | **Application Insights** | Monitoring and telemetry | Connected to Log Analytics ||
 
-### **Option 1: Deploy to Azure Button (Fastest)**
+```json
 
-| **Log Analytics Workspace** | Centralized logging | 30-day retention || **Log Analytics Workspace** | Centralized logging | 30-day retention |
+{### **Option 1: Deploy to Azure Button (Fastest)**
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
+  "functionAppName": {
 
-<img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader ||
+    "value": "func-costanalysis-prod-001"| **Log Analytics Workspace** | Centralized logging | 30-day retention || **Log Analytics Workspace** | Centralized logging | 30-day retention |
 
-</a>
+  },
+
+  "environment": {<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
+
+    "value": "prod"
+
+  },<img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader ||
+
+  "location": {
+
+    "value": "East US"</a>
+
+  },
+
+  "skuName": {
+
+    "value": "Y1"
+
+  }<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
+
+}
+
+```<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true" alt="Visualize"/>## 📁 **Files in This Folder**## 🚀 **Quick Deployment**
 
 
 
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
+**Hosting Plans:**</a>
 
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true" alt="Visualize"/>## 📁 **Files in This Folder**## 🚀 **Quick Deployment**
+- **Y1 (Consumption)**: Pay-per-execution, auto-scaling, cost-effective
 
-</a>
+- **EP1-EP3 (Premium)**: Pre-warmed instances, better performanceClick the **Deploy to Azure** button above to deploy directly from GitHub to your Azure subscription using the Azure Portal. The **Visualize** button shows the infrastructure diagram.
 
 
 
-Click the **Deploy to Azure** button above to deploy directly from GitHub to your Azure subscription using the Azure Portal. The **Visualize** button shows the infrastructure diagram.
+---- `simple.json` - ARM template for Azure infrastructure### **Option 1: Deploy to Azure Button (Fastest)**
 
-- `simple.json` - ARM template for Azure infrastructure### **Option 1: Deploy to Azure Button (Fastest)**
 
-**Parameters you'll be prompted for:**
 
-- `simple.parameters.json` - Parameter values for the template
+After infrastructure deployment, deploy your function code from the main project directory:**Parameters you'll be prompted for:**
 
+```bash
+
+func azure functionapp publish [YOUR-FUNCTION-APP-NAME]- `simple.parameters.json` - Parameter values for the template
+
+```
 - Subscription and Resource Group
 
-- Region/Location (recommend: East US, West US 2, or Sweden Central)- `README.md` - This deployment guide[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)
-
+- Region/Location (recommend: East US, West US 2, or Sweden Central)
 - Environment Name (default: "prod")
 
-
-
-### **Prerequisites**
-
-## 🚀 **Deployment Options**[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)
-
-- Azure CLI installed and logged in (`az login`)
-
-- Azure Functions Core Tools (`npm install -g azure-functions-core-tools@4`)
-
-
-
-### **Option 2: Azure CLI Deployment**### **Option 1: Deploy to Azure Button (Fastest)**Click the **Deploy to Azure** button above to deploy directly from GitHub to your Azure subscription using the Azure Portal. The **Visualize** button shows the infrastructure diagram.
-
+### **Option 2: Azure CLI Deployment**
 
 
 ```bash
 
 # Create resource group
+az group create --name rg-costanalysis-prod --location "East US"
 
-az group create --name rg-costanalysis-prod --location "East US"[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)**Parameters you'll be prompted for:**
-
-
-
-# Deploy using JSON template with parameters
-
+# Deploy
 az deployment group create \
-
-    --resource-group rg-costanalysis-prod \[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)- Subscription and Resource Group
-
+    --resource-group rg-costanalysis-prod \
     --template-file deploy/simple.json \
-
-    --parameters deploy/simple.parameters.json- Region/Location (recommend: East US, West US 2, or Sweden Central)
-
-
-
-# Deploy function codeClick the **Deploy to Azure** button above to deploy directly from GitHub to your Azure subscription using the Azure Portal.- Environment Name (default: "prod")
-
-func azure functionapp publish [YOUR-FUNCTION-APP-NAME]
-
-```
+    --parameters deploy/simple.parameters.json
 
 
 
-### **Option 3: PowerShell Deployment**### **Prerequisites**### **Prerequisites**
 
 
-
-```powershell
-
-# Create resource group
-
-az group create --name "rg-costanalysis-prod" --location "East US"- Azure CLI installed and logged in (`az login`)- Azure CLI installed and logged in (`az login`)
-
-
-
-# Deploy infrastructure- Azure Functions Core Tools (`npm install -g azure-functions-core-tools@4`)- Azure Functions Core Tools (`npm install -g azure-functions-core-tools@4`)
-
-az deployment group create `
-
-    --resource-group "rg-costanalysis-prod" `- PowerShell 5.1+ or PowerShell Core 7+
-
-    --template-file "deploy/simple.json" `
-
-    --parameters "deploy/simple.parameters.json"### **Option 2: Azure CLI Deployment**
-
-
-
-# Deploy function code### **Option 2: Quick PowerShell Script (Recommended)**
+# Deploy function code###
 
 func azure functionapp publish [YOUR-FUNCTION-APP-NAME]
-
-``````bash
-
-
-
-## ⚙️ **Customization**# Create resource group```powershell
-
-
-
-Edit `deploy/simple.parameters.json` to customize your deployment:az group create --name rg-costanalysis-prod --location "East US"# Navigate to your project directory
-
-
-
-```jsoncd "c:\Apps\AgenticAI\deploy"
-
-{
-
-  "functionAppName": {# Deploy using JSON template with parameters
-
-    "value": "func-costanalysis-prod-001"
-
-  },az deployment group create \# Run quick deployment script (creates resource group and deploys everything)
-
-  "environment": {
-
-    "value": "prod"    --resource-group rg-costanalysis-prod \.\quick-deploy.ps1 -SubscriptionId "your-subscription-id"
-
-  },
-
-  "location": {    --template-file deploy/simple.json \
-
-    "value": "East US"
-
-  },    --parameters deploy/simple.parameters.json# Or specify custom location and environment
-
-  "skuName": {
-
-    "value": "Y1".\quick-deploy.ps1 `
-
-  }
-
-}# Deploy function code    -SubscriptionId "your-subscription-id" `
-
-```
-
-func azure functionapp publish [YOUR-FUNCTION-APP-NAME]    -Location "West US 2" `
-
-**Hosting Plans:**
-
-```    -Environment "dev"
-
-- **Y1 (Consumption)**: Pay-per-execution, auto-scaling, cost-effective for low-medium usage
-
-- **EP1-EP3 (Premium)**: Pre-warmed instances, better performance, VNet integration```
 
 
 
 ## 🔐 **Security & Permissions**### **Option 3: PowerShell Deployment**
 
-
-
 The deployment automatically configures:### **Option 3: Full PowerShell Script (Advanced)**
-
 
 
 | Role | Scope | Purpose |```powershell```powershell
@@ -226,10 +184,7 @@ The deployment automatically configures:### **Option 3: Full PowerShell Script (
 ### **Multi-Subscription Setup**
 
 
-
 For tenant-wide analysis, assign roles at **Management Group** level:# Deploy infrastructure# Run deployment script
-
-
 
 ```bashaz deployment group create `.\Deploy-CostAnalysis.ps1 `
 
