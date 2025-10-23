@@ -11,23 +11,23 @@
   "parameters": {
     "functionAppName": {
       "type": "string",
-      "defaultValue": "[format('func-costanalysis-{0}-001', parameters('environment'))]",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the Function App"
       }
     },
     "hostingPlanName": {
       "type": "string",
-      "defaultValue": "[format('plan-costanalysis-{0}', parameters('environment'))]",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the App Service Plan"
       }
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "[format('sacost{0}{1}', parameters('environment'), uniqueString(resourceGroup().id))]",
+      "defaultValue": "",
       "metadata": {
-        "description": "Name of the Storage Account"
+        "description": "Name of the Storage Account (3-24 characters, alphanumeric only)"
       }
     },
     "environment": {
