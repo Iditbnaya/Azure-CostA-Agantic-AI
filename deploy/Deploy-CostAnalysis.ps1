@@ -79,8 +79,8 @@ Write-Host "🏗️  Deploying Azure resources..." -ForegroundColor Yellow
 $deployCommand = @(
     "az", "deployment", "group", "create"
     "--resource-group", $ResourceGroupName
-    "--template-file", "deploy/main.bicep"
-    "--parameters", "deploy/main.bicepparam"
+    "--template-file", "$ScriptDir/main.bicep"
+    "--parameters", "$ScriptDir/main.bicepparam"
     "--name", $DeploymentName
     "--verbose"
 )

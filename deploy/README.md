@@ -17,41 +17,63 @@ This folder contains Infrastructure as Code (IaC) templates and scripts to deplo
 
 ### **Option 1: Deploy to Azure Button (Fastest)**
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmaster%2Fdeploy%2Fsimple.bicep)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)
 
-[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmaster%2Fdeploy%2Fsimple.bicep)
+[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json)
 
 Click the **Deploy to Azure** button above to deploy directly from GitHub to your Azure subscription using the Azure Portal. The **Visualize** button shows the infrastructure diagram.
 
 **Parameters you'll be prompted for:**
+
 - Subscription and Resource Group
 - Region/Location (recommend: East US, West US 2, or Sweden Central)
 - Environment Name (default: "prod")
-- App Name (default: "costanalysis")
 
 ### **Prerequisites**
+
 - Azure CLI installed and logged in (`az login`)
 - Azure Functions Core Tools (`npm install -g azure-functions-core-tools@4`)
 - PowerShell 5.1+ or PowerShell Core 7+
 
-### **Option 2: PowerShell Script (Recommended)**
+### **Option 2: Quick PowerShell Script (Recommended)**
+
 ```powershell
 # Navigate to your project directory
-cd "c:\Apps\AzureCost\AzureCostagents\CostAgents"
+cd "c:\Apps\AgenticAI\deploy"
 
-# Run deployment script
-.\deploy\Deploy-CostAnalysis.ps1 `
+# Run quick deployment script (creates resource group and deploys everything)
+.\quick-deploy.ps1 -SubscriptionId "your-subscription-id"
+
+# Or specify custom location and environment
+.\quick-deploy.ps1 `
     -SubscriptionId "your-subscription-id" `
-    -ResourceGroupName "rg-costanalysis-prod" `
-    -Location "East US"
+    -Location "West US 2" `
+    -Environment "dev"
 ```
 
-### **Option 3: Manual Azure CLI**
+### **Option 3: Full PowerShell Script (Advanced)**
+```powershell
+# Create resource group first
+az group create --name "rg-costanalysis-prod" --location "East US"
+
+# Run deployment script
+.\Deploy-CostAnalysis.ps1 `
+    -ResourceGroupName "rg-costanalysis-prod" `
+    -Environment "prod"
+```
+
+### **Option 4: Manual Azure CLI**
 ```bash
 # Create resource group
 az group create --name rg-costanalysis-prod --location "East US"
 
-# Deploy infrastructure
+# Deploy infrastructure using simple template
+az deployment group create \
+    --resource-group rg-costanalysis-prod \
+    --template-file deploy/simple.bicep \
+    --parameters environment=prod location="East US"
+
+# Or deploy using full template with parameters file
 az deployment group create \
     --resource-group rg-costanalysis-prod \
     --template-file deploy/main.bicep \

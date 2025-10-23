@@ -5,7 +5,7 @@ param functionAppName string = 'func-costanalysis-${environment}-001'
 param hostingPlanName string = 'plan-costanalysis-${environment}'
 
 @description('Name of the Storage Account')
-param storageAccountName string = 'sacostanalysis${environment}001'
+param storageAccountName string = 'sacost${environment}${uniqueString(resourceGroup().id)}'
 
 @description('Environment (dev, test, prod)')
 param environment string = 'prod'
