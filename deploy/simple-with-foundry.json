@@ -72,6 +72,32 @@
         "description": "Location for all resources"
       }
     },
+    "cognitiveServicesLocation": {
+      "type": "string",
+      "defaultValue": "eastus",
+      "allowedValues": [
+        "eastus",
+        "eastus2", 
+        "westus",
+        "westus2",
+        "westus3",
+        "westeurope",
+        "northeurope",
+        "southeastasia",
+        "eastasia",
+        "canadacentral",
+        "japaneast",
+        "uksouth",
+        "francecentral",
+        "swedencentral",
+        "switzerlandnorth",
+        "germanywestcentral",
+        "norwayeast"
+      ],
+      "metadata": {
+        "description": "Location for Cognitive Services (must be a supported region)"
+      }
+    },
     "runtime": {
       "type": "string",
       "defaultValue": "python",
@@ -177,7 +203,7 @@
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2023-05-01",
       "name": "[parameters('cognitiveServicesName')]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('cognitiveServicesLocation')]",
       "tags": "[parameters('tags')]",
       "sku": {
         "name": "S0"

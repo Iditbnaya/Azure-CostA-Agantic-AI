@@ -66,6 +66,7 @@ Includes all basic parameters plus:
 | `aiProjectName` | `aiproj-costanalysis-{env}` | Azure AI Foundry Project name |
 | `keyVaultName` | `kv-costanalysis-{unique}` | Key Vault for secrets |
 | `cognitiveServicesName` | `cs-costanalysis-{env}` | Cognitive Services account |
+| `cognitiveServicesLocation` | `eastus` | Location for Cognitive Services (must be supported region) |
 
 ## 🛠️ **Manual Deployment via Azure CLI**
 
@@ -145,5 +146,6 @@ az deployment group create \
 - **Storage account name too long:** Reduce `environment` parameter length
 - **RBAC assignment failures:** Ensure deploying user has Owner/User Access Administrator role
 - **AI Foundry region unavailable:** Check AI services availability in your region
+- **Cognitive Services region error:** Use `cognitiveServicesLocation` parameter to specify a supported region (eastus, westus2, westeurope, etc.)
 - **Template validation errors:** Verify parameter file JSON syntax
 - **Circular dependency errors:** Fixed in current template version - update to latest template
