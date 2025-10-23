@@ -135,6 +135,10 @@ az deployment group create \
    - Deploy AI models to the AI Project
    - Configure agent connections between Function App and AI services
    - Set up secure communication via Key Vault
+   - Get Function App Managed Identity ID (if needed):
+     ```bash
+     az functionapp identity show --name [FUNCTION-APP-NAME] --resource-group [RESOURCE-GROUP] --query principalId -o tsv
+     ```
 
 ## 🔍 **Troubleshooting**
 
@@ -142,3 +146,4 @@ az deployment group create \
 - **RBAC assignment failures:** Ensure deploying user has Owner/User Access Administrator role
 - **AI Foundry region unavailable:** Check AI services availability in your region
 - **Template validation errors:** Verify parameter file JSON syntax
+- **Circular dependency errors:** Fixed in current template version - update to latest template

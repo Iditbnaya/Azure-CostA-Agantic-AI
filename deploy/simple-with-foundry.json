@@ -309,10 +309,6 @@
             {
               "name": "AI_PROJECT_CONNECTION_STRING",
               "value": "[format('https://{0}.api.azureml.ms', parameters('aiProjectName'))]"
-            },
-            {
-              "name": "AZURE_CLIENT_ID",
-              "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'full').identity.principalId]"
             }
           ]
         }
