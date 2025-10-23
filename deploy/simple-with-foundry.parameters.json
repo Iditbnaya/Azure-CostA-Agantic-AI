@@ -18,7 +18,7 @@
     "value": "kv-costanalysis-prod"
   },
   "cognitiveServicesName": {
-    "value": "cs-costanalysis-prod"
+    "value": "cscostanalysisprod"
   },
   "environment": {
     "value": "prod"

@@ -53,9 +53,9 @@
     },
     "cognitiveServicesName": {
       "type": "string",
-      "defaultValue": "[format('cs-costanalysis-{0}', parameters('environment'))]",
+      "defaultValue": "[format('cscostanalysis{0}', parameters('environment'))]",
       "metadata": {
-        "description": "Name of the Cognitive Services account"
+        "description": "Name of the Cognitive Services account (alphanumeric only)"
       }
     },
     "environment": {
