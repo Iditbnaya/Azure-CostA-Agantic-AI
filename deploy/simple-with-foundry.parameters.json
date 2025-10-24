@@ -1,33 +1,27 @@
 {
   "functionAppName": {
-    "value": "func-costanalysis-prod-001"
+    "value": "YOUR-FUNCTION-APP-NAME"
   },
   "storageAccountName": {
-    "value": "sacostprod001"
+    "value": "yourstorageaccount01"
   },
   "hostingPlanName": {
-    "value": "plan-costanalysis-prod"
+    "value": "YOUR-HOSTING-PLAN-NAME"
   },
   "aiHubName": {
-    "value": "aihub-costanalysis-prod"
+    "value": "YOUR-AI-HUB-NAME"
   },
   "aiProjectName": {
-    "value": "aiproj-costanalysis-prod"
+    "value": "YOUR-AI-PROJECT-NAME"
   },
   "keyVaultName": {
-    "value": "kv-costanalysis-prod"
-  },
-  "cognitiveServicesName": {
-    "value": "cscostanalysisprod"
+    "value": "YOUR-KEY-VAULT-NAME"
   },
   "environment": {
     "value": "prod"
   },
   "location": {
     "value": "East US"
-  },
-  "cognitiveServicesLocation": {
-    "value": "eastus"
   },
   "runtime": {
     "value": "python"

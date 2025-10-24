@@ -33,11 +33,46 @@ Deploy Function App infrastructure plus Azure AI Foundry for agent development.
 <img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
 </a>
 
-**Includes:** All Basic Infrastructure + AI Foundry Hub + AI Project + Key Vault + Cognitive Services
+**Includes:** All Basic Infrastructure + AI Foundry Hub + AI Project + Key Vault
+
+**Note:** Models (GPT-4, GPT-3.5) are available through AI Foundry - no separate Cognitive Services needed!
 
 ---
 
 ## 📋 **Prerequisites**
+
+### Required Parameters
+Before deployment, you must provide names for all resources. The templates do not include default values to ensure you can customize resource names according to your organization's naming conventions.
+
+**Required Resource Names:**
+- **Function App Name**: Must be globally unique (e.g., `func-costanalysis-yourorg-01`)
+- **Storage Account Name**: Must be globally unique, 3-24 characters, alphanumeric only (e.g., `sacostanalysisorg01`)
+- **Hosting Plan Name**: Can be regional unique (e.g., `plan-costanalysis-prod`)
+- **AI Hub Name**: Must be globally unique (AI Foundry only)
+- **AI Project Name**: Must be unique within the hub (AI Foundry only)
+- **Key Vault Name**: Must be globally unique (AI Foundry only)
+
+**Note:** AI models (GPT-4, GPT-3.5) are included in AI Foundry - no separate Cognitive Services required!
+
+### Naming Convention Guidelines
+- **Function App**: Use format `func-<solution>-<environment>-<instance>` (e.g., `func-costanalysis-prod-01`)
+- **Storage Account**: Use format `sa<solution><environment><instance>` (e.g., `sacostanalysisprod01`)
+- **AI Services**: Use format `<prefix>-<solution>-<environment>` (e.g., `aihub-costanalysis-prod`)
+
+### Regional Considerations
+
+**Important:** Some Azure services have limited regional availability. For best compatibility:
+- Use **East US**, **West US 2**, or **West Europe** for all services
+- Cognitive Services may not be available in all regions (e.g., Israel Central)
+- The template includes separate location parameters for services with different availability
+
+### Parameter Files
+
+This repository includes example parameter files:
+- `simple.parameters.json` - Example values for basic infrastructure
+- `simple-with-foundry.parameters.json` - Example values for AI Foundry infrastructure
+
+**⚠️ Important:** Replace all placeholder values (e.g., "YOUR-FUNCTION-APP-NAME") with your actual resource names before deployment.
 
 - Azure subscription with appropriate permissions
 - Resource group (will be created if it doesn't exist)
