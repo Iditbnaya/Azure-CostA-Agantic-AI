@@ -106,7 +106,7 @@
       "apiVersion": "2020-02-02",
       "name": "[parameters('appInsightsName')]",
       "location": "[parameters('location')]",
-      "tags": "[union(parameters('tags'), createObject('hidden-link: /app-insights-resource-id', format('/subscriptions/{0}/resourceGroups/{1}/providers/microsoft.insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('appInsightsName')))]",
+      "tags": "[union(parameters('tags'), createObject('hidden-link: /app-insights-resource-id', format('/subscriptions/{0}/resourceGroups/{1}/providers/microsoft.insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('appInsightsName'))))]",
       "kind": "web",
       "properties": {
         "Application_Type": "web",

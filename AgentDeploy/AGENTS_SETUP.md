@@ -3,7 +3,7 @@
 ## Prerequisites
 
 1. **Azure AI Foundry Project**: You need an Azure AI Foundry (formerly Azure AI Studio) project with a deployed model
-2. **Function App**: Your Azure Function App is deployed at `https://func-costanalysis-prod-001.azurewebsites.net`
+2. **Function App**: Your Azure Function App is deployed at `fun-cost-agent-working.azurewebsites.net`
 3. **Python Packages**: Install the Microsoft Agent Framework (preview)
 
 ## Setup Instructions
@@ -105,9 +105,9 @@ The system uses two coordinated agents:
 ## Current Status
 
 ✅ **Infrastructure Deployed:**
-- Function App: `func-costanalysis-prod-001`
-- Storage Account: `sacostanalysisprod001`
-- Resource Group: `rg-costanalysis-prod-v2`
+- Function App: `fun-cost-agent-working`
+- Storage Account: `funcostagentworking`
+- Resource Group: `funcostagentworking`
 - RBAC Roles: Cost Management Reader, Storage Blob Data Contributor
 
 ⚠️ **Pending:**

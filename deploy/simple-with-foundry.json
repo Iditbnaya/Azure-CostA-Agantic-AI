@@ -18,9 +18,9 @@
     },
     "hostingPlanName": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "[format('FLEX-{0}-{1}', parameters('functionAppName'), uniqueString(resourceGroup().id))]",
       "metadata": {
-        "description": "Name of the App Service Plan"
+        "description": "Name of the Flex Consumption Plan"
       }
     },
     "storageAccountName": {
@@ -74,9 +74,9 @@
     },
     "skuName": {
       "type": "string",
-      "defaultValue": "Y1",
+      "defaultValue": "FlexConsumption",
       "metadata": {
-        "description": "App Service Plan SKU"
+        "description": "Function App SKU (FlexConsumption for Flex Consumption plan)"
       }
     },
     "deployModel": {
@@ -199,7 +199,7 @@
       "tags": "[parameters('tags')]",
       "sku": {
         "name": "[parameters('skuName')]",
-        "tier": "[if(equals(parameters('skuName'), 'Y1'), 'Dynamic', 'ElasticPremium')]"
+        "tier": "FlexConsumption"
       },
       "properties": {
         "reserved": true
@@ -218,40 +218,31 @@
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "reserved": true,
-        "httpsOnly": true,
+        "httpsOnly": false,
         "clientAffinityEnabled": false,
+        "storageAccountRequired": false,
         "siteConfig": {
-          "linuxFxVersion": "[format('{0}|{1}', toUpper(parameters('runtime')), parameters('runtimeVersion'))]",
+          "numberOfWorkers": 1,
+          "alwaysOn": false,
+          "functionAppScaleLimit": 100,
+          "minimumElasticInstanceCount": 0,
           "appSettings": [
-            {
-              "name": "AzureWebJobsStorage",
-              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-04-01').keys[0].value)]"
-            },
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~4"
-            },
-            {
-              "name": "FUNCTIONS_WORKER_RUNTIME",
-              "value": "[parameters('runtime')]"
-            },
-            {
-              "name": "WEBSITE_PYTHON_DEFAULT_VERSION",
-              "value": "[parameters('runtimeVersion')]"
-            },
-            {
-              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-              "value": "true"
-            },
-            {
-              "name": "ENABLE_ORYX_BUILD",
-              "value": "true"
-            },
             {
               "name": "AI_PROJECT_CONNECTION_STRING",
               "value": "[format('https://{0}.api.azureml.ms', parameters('aiProjectName'))]"
             }
           ]
+        },
+        "functionAppConfig": {
+          "runtime": {
+            "name": "[parameters('runtime')]",
+            "version": "[parameters('runtimeVersion')]"
+          },
+          "scaleAndConcurrency": {
+            "alwaysReady": [],
+            "maximumInstanceCount": 100,
+            "instanceMemoryMB": 2048
+          }
         }
       },
       "dependsOn": [
