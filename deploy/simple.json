@@ -74,9 +74,9 @@
     },
     "skuName": {
       "type": "string",
-      "defaultValue": "FlexConsumption",
+      "defaultValue": "FC1",
       "metadata": {
-        "description": "Function App SKU (FlexConsumption for Flex Consumption plan)"
+        "description": "Function App SKU (FC1 for Flex Consumption plan)"
       }
     },
     "tags": {
