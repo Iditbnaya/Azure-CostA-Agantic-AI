@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AZURE_FUNCTIONAPP_NAME: fun-test-cost-Agent-v03  # Updated with actual Function App name
+      AZURE_FUNCTIONAPP_NAME: Fun-AzureCost-Testv3  # Updated with actual Function App name
       PYTHON_VERSION: '3.11'
     steps:
       - name: Checkout
@@ -43,16 +43,16 @@ jobs:
         run: |
           az functionapp deployment source config-zip \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} \
+            --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
             --src functionapp.zip
 
       - name: Post-deploy sync triggers
         run: |
-          az functionapp sync-function-triggers --name ${{ secrets.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+          az functionapp sync-function-triggers --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Output URL
         run: |
-          echo "Deployed: https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net"
+          echo "Deployed: https://${{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net"
 
 # Required GitHub Secrets:
 # AZURE_PUBLISH_PROFILE -> Full XML content of the publish profile (ZipDeploy or MSDeploy)
