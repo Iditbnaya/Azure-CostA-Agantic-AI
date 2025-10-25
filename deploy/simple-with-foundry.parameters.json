@@ -2,9 +2,6 @@
   "functionAppName": {
     "value": "YOUR-FUNCTION-APP-NAME"
   },
-  "storageAccountName": {
-    "value": "yourstorageaccount01"
-  },
   "hostingPlanName": {
     "value": "YOUR-HOSTING-PLAN-NAME"
   },

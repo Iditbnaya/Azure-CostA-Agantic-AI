@@ -25,9 +25,9 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "[format('sacost{0}{1}', parameters('environment'), uniqueString(resourceGroup().id))]",
       "metadata": {
-        "description": "Name of the Storage Account (3-24 characters, alphanumeric only)"
+        "description": "Name of the Storage Account"
       }
     },
     "aiHubName": {

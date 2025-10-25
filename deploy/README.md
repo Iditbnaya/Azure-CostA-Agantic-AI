@@ -45,12 +45,19 @@ Deploy Function App infrastructure plus Azure AI Foundry for agent development.
 Before deployment, you must provide names for all resources. The templates do not include default values to ensure you can customize resource names according to your organization's naming conventions.
 
 **Required Resource Names:**
+
+### Basic Template (simple.json):
 - **Function App Name**: Must be globally unique (e.g., `func-costanalysis-yourorg-01`)
-- **Storage Account Name**: Must be globally unique, 3-24 characters, alphanumeric only (e.g., `sacostanalysisorg01`)
 - **Hosting Plan Name**: Can be regional unique (e.g., `plan-costanalysis-prod`)
-- **AI Hub Name**: Must be globally unique (AI Foundry only)
-- **AI Project Name**: Must be unique within the hub (AI Foundry only)
-- **Key Vault Name**: Must be globally unique (AI Foundry only)
+- **Storage Account Name**: Auto-generated (e.g., `sacostprodabc123def`)
+
+### AI Foundry Template (simple-with-foundry.json):
+- **Function App Name**: Must be globally unique (e.g., `func-costanalysis-yourorg-01`)
+- **Hosting Plan Name**: Can be regional unique (e.g., `plan-costanalysis-prod`)  
+- **Storage Account Name**: Auto-generated (e.g., `sacostprodabc123def`)
+- **AI Hub Name**: Must be globally unique (e.g., `aihub-costanalysis-yourorg`)
+- **AI Project Name**: Must be unique within the hub (e.g., `aiproj-costanalysis-yourorg`)
+- **Key Vault Name**: Must be globally unique (e.g., `kv-costanalysis-yourorg`)
 
 **Note:** AI models (GPT-4, GPT-3.5) are included in AI Foundry - no separate Cognitive Services required!
 
