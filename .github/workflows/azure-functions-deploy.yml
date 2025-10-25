@@ -33,18 +33,14 @@ jobs:
           zip -r functionapp.zip . -x '*.git*'
         shell: bash
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy Function App
+      # Deploy using publish profile (ZipDeploy). This avoids storage key restrictions.
+      - name: Deploy Function App (Publish Profile)
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: functionapp.zip
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           respect-funcignore: true
-          scm-do-build-during-deployment: true
 
       - name: Post-deploy sync triggers
         run: |
@@ -55,6 +51,6 @@ jobs:
           echo "Deployed: https://${{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net"
 
 # Required GitHub Secrets:
-# AZURE_CREDENTIALS -> JSON from `az ad sp create-for-rbac --name <name> --role Contributor --scopes /subscriptions/<subId> --sdk-auth`
-# AZURE_RESOURCE_GROUP -> Name of the resource group containing the Function App
-# (Optional) AZURE_SUBSCRIPTION_ID if not embedded in AZURE_CREDENTIALS
+# AZURE_PUBLISH_PROFILE -> Full XML content of the publish profile (ZipDeploy or MSDeploy)
+# AZURE_RESOURCE_GROUP   -> Name of the resource group containing the Function App (used for trigger sync)
+# (Optional) If you prefer service principal instead, restore azure/login step with AZURE_CREDENTIALS.
