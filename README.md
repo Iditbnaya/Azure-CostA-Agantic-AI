@@ -197,20 +197,44 @@ When receiving a relative time range such as "last month" or "previous billing c
 
 ## 🚀 Deployment
 
-### Quick Deploy to Azure
+## 🏗️ **What Gets Deployed**
 
-Deploy the complete Azure infrastructure with one click:
+| Resource | Purpose | Configuration |
+|----------|---------|---------------|
+| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan |
+| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 |
+| **App Service Plan** | Hosting plan for Function App | Consumption (Y1) or Premium (EP1-EP3) |
+| **Application Insights** | Monitoring and telemetry | Connected to Log Analytics |
+| **Log Analytics Workspace** | Centralized logging | 30-day retention |
+| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader |
+
+## 🚀 **Deployment Options**
+
+### Option 1: Basic Infrastructure Only
+
+Deploy just the Function App infrastructure for cost analysis functions.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json" target="_blank">
 <img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
 </a>
 
-**What gets deployed:**
-- Azure Function App (Python 3.11, Linux)
-- Storage Account (for function data)
-- Application Insights (monitoring)
-- Log Analytics Workspace (logging)
-- Managed Identity with required RBAC permissions
+**Includes:** Function App + Storage + App Service Plan + Application Insights + Log Analytics
+
+### Option 2: Complete AI Agent Infrastructure
+
+Deploy Function App infrastructure plus Azure AI Foundry for agent development.
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple-with-foundry.json" target="_blank">
+<img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
+</a>
+
+**Includes:** All Basic Infrastructure + AI Foundry Hub + AI Project
+---
+## 📋 **Prerequisites**
+
+- Azure subscription with appropriate permissions
+- Resource group (will be created if it doesn't exist)
+- Owner or Contributor access to the subscription for RBAC assignments
 
 After deployment, you'll need to deploy the function code using: `func azure functionapp publish [YOUR-FUNCTION-APP-NAME]`
 

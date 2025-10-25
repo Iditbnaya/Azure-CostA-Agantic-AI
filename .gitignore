@@ -160,3 +160,4 @@ deployment.zip
 *.azurepubxml
 
 .env.template
+local.settings.json
