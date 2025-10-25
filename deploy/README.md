@@ -75,27 +75,59 @@ This repository includes example parameter files:
 
 ## ⚙️ **Template Parameters**
 
-### Basic Deployment (simple.json)
+### Basic Deployment (`simple.json`)
 
-| Parameter | Default Value | Description |
-|-----------|---------------|-------------|
-| `functionAppName` | `func-costanalysis-{env}-001` | Name of the Function App |
-| `hostingPlanName` | `plan-costanalysis-{env}` | Name of the App Service Plan |
-| `storageAccountName` | `sacost{env}{unique}` | Storage account (auto-generated) |
-| `environment` | `prod` | Environment suffix (dev, test, prod) |
-| `location` | `East US` | Azure region for deployment |
-| `hostingPlanSku` | `Y1` | App Service Plan SKU |
+These parameters align with the current ARM template. Empty default values (`""`) mean you must supply a value in the parameter file or portal UI. The storage account name is auto-generated using an ARM expression; you can override it by providing a value if desired.
 
-### AI Foundry Deployment (simple-with-foundry.json)
+| Parameter | Default (Template) | Description |
+|-----------|--------------------|-------------|
+| `functionAppName` | `` (required) | Globally unique Function App name |
+| `hostingPlanName` | `` (required) | App Service Plan name |
+| `storageAccountName` | `sacost{env}{unique}` (auto) | Storage account (auto-generated if left blank) |
+| `environment` | `prod` | Environment label (dev, test, prod) |
+| `location` | `<resource group location>` | Region (inherits the resource group location) |
+| `runtime` | `python` | Function runtime language |
+| `runtimeVersion` | `3.11` | Python version for Functions |
+| `skuName` | `Y1` | Plan SKU (Y1 for Consumption; EP1/EP2/EP3 for Premium) |
+| `tags` | object (sample provided) | Resource tagging object |
 
-Includes all basic parameters plus:
+Tag object example:
 
-| Parameter | Default Value | Description |
-|-----------|---------------|-------------|
-| `aiHubName` | `aihub-costanalysis-{env}` | Azure AI Foundry Hub name |
-| `aiProjectName` | `aiproj-costanalysis-{env}` | Azure AI Foundry Project name |
-| `cognitiveServicesName` | `cscostanalysis{env}` | Cognitive Services account (alphanumeric only) |
-| `cognitiveServicesLocation` | `eastus` | Location for Cognitive Services (must be supported region) |
+```json
+{
+   "Environment": "PROD",
+   "Application": "Azure Cost Management",
+   "Project": "Cost Optimization",
+   "Owner": "FinOps Team",
+   "CostCenter": "IT-Operations"
+}
+```
+
+### AI Foundry Deployment (`simple-with-foundry.json`)
+
+Includes all basic parameters plus AI Foundry Hub & Project and optional model deployment settings.
+
+| Parameter | Default (Template) | Description |
+|-----------|--------------------|-------------|
+| `aiHubName` | `` (required) | Azure AI Foundry Hub name (globally unique) |
+| `aiProjectName` | `` (required) | Azure AI Foundry Project name (unique within Hub) |
+| `deployModel` | `true` | Whether to deploy a model artifact placeholder |
+| `modelName` | `gpt-41-mini` | Allowed: `gpt-41-mini`, `gpt-4o-mini`, `o1-mini` |
+| `functionAppName` | `` (required) | Function App name |
+| `hostingPlanName` | `` (required) | App Service Plan name |
+| `storageAccountName` | `sacost{env}{unique}` (auto) | Auto-generated storage account name |
+| `environment` | `prod` | Environment label |
+| `location` | `<resource group location>` | Region (inherits RG location) |
+| `runtime` | `python` | Runtime language |
+| `runtimeVersion` | `3.11` | Python version |
+| `skuName` | `Y1` | Plan SKU |
+| `tags` | object | Resource tags |
+
+Notes:
+
+- Cognitive Services and Key Vault are no longer deployed by this template (simplified architecture).
+- To change the model later, update application logic or redeploy with a different `modelName`.
+- If you set `deployModel` to `false`, no model deployment step is executed; you can attach an existing model manually in AI Foundry Studio.
 
 ## 🛠️ **Manual Deployment via Azure CLI**
 
@@ -128,6 +160,7 @@ az deployment group create \
 ## 🔧 **Customization**
 
 1. **Copy parameter files:**
+
    ```bash
    cp simple.parameters.json my-custom.parameters.json
    ```
@@ -138,12 +171,13 @@ az deployment group create \
    - Adjust environment settings
 
 3. **Deploy with custom parameters:**
-   ```bash
-   az deployment group create \
-     --resource-group "your-rg" \
-     --template-file "simple.json" \
-     --parameters "@my-custom.parameters.json"
-   ```
+
+    ```bash
+    az deployment group create \
+       --resource-group "your-rg" \
+       --template-file "simple.json" \
+       --parameters "@my-custom.parameters.json"
+    ```
 
 ## 📁 **Files in This Folder**
 
@@ -161,12 +195,13 @@ az deployment group create \
    - Test cost analysis endpoints
 
 2. **AI Foundry Infrastructure:**
-   - Access AI Foundry Studio via Azure portal
-   - Deploy AI models to the AI Project
-   - Configure agent connections between Function App and AI services
-   - Set up secure communication via Key Vault
-   - Get Function App Managed Identity ID (if needed):
-     ```bash
-     az functionapp identity show --name [FUNCTION-APP-NAME] --resource-group [RESOURCE-GROUP] --query principalId -o tsv
-     ```
+    - Access AI Foundry Studio via Azure portal
+    - (Optional) If `deployModel` was true, verify the model placeholder and configure it as needed
+    - Configure agent connections between Function App endpoints and AI Project
+    - Review allowed model names: `gpt-41-mini`, `gpt-4o-mini`, `o1-mini`
+    - Get Function App Managed Identity ID (if needed):
+
+       ```bash
+       az functionapp identity show --name [FUNCTION-APP-NAME] --resource-group [RESOURCE-GROUP] --query principalId -o tsv
+       ```
 
