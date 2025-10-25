@@ -8,11 +8,6 @@
 
 ## ✅ Successfully Deployed Resources
 
-### Azure Infrastructure (Resource Group: `rg-costanalysis-prod-v2`)
-- **Function App:** `func-costanalysis-prod-001` (Python 3.11, Consumption plan)
-- **Storage Account:** `sacostanalysisprod001` (Standard_LRS)
-- **App Service Plan:** `asp-costanalysis-prod-001` (Dynamic Y1)
-- **Application Insights:** `appi-costanalysis-prod-001`
 
 ### RBAC Permissions Configured
 - **Cost Management Reader** (subscription scope)
@@ -22,6 +17,7 @@
 ## 📁 Files Created
 
 ### Infrastructure & Deployment
+
 - `deploy/main.bicep` - Main infrastructure template
 - `deploy/simple.bicep` - Simplified deployment template (working)
 - `deploy/main.bicepparam` - Parameter configuration
@@ -106,3 +102,7 @@ Invoke-WebRequest -Uri "https://func-costanalysis-prod-001.azurewebsites.net/api
 3. **AI-powered cost optimization** using latest Microsoft Agent Framework
 4. **Comprehensive automation** with Bicep, PowerShell, and GitHub Actions
 5. **Extensive documentation** for maintenance and future development
+
+
+
+az functionapp deployment source config-zip --resource-group RG-AzureCost-Testv01 --name Fun-AzureCost-Testv3 --src functionapp.zip --build-remote true
