@@ -2,16 +2,6 @@
 
 This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
 
-## 🏗️ **What Gets Deployed**
-
-| Resource | Purpose | Configuration |
-|----------|---------|---------------|
-| **Function App** | Hosts the Python cost analysis functions | Python 3.11, Linux, Consumption Plan |
-| **Storage Account** | Function App storage and content | Standard LRS, HTTPS only, TLS 1.2 |
-| **App Service Plan** | Hosting plan for Function App | Consumption (Y1) or Premium (EP1-EP3) |
-| **Application Insights** | Monitoring and telemetry | Connected to Log Analytics |
-| **Log Analytics Workspace** | Centralized logging | 30-day retention |
-| **RBAC Assignments** | Managed Identity permissions | Cost Management Reader, Reader, Advisor Reader |
 
 ## 🚀 **Deployment Options**
 
