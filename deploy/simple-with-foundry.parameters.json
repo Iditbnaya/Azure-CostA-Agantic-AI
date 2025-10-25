@@ -18,7 +18,7 @@
     "value": "prod"
   },
   "location": {
-    "value": "East US"
+    "value": "Sweden Central"
   },
   "runtime": {
     "value": "python"
@@ -27,7 +27,7 @@
     "value": "3.11"
   },
   "skuName": {
-    "value": "Y1"
+    "value": "FlexConsumption"
   },
   "deployModel": {
     "value": true
