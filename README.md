@@ -197,8 +197,6 @@ When receiving a relative time range such as "last month" or "previous billing c
 
 ## 🚀 Deployment
 
-## 🚀 **Deployment Options**
-
 ### Option 1: Basic Infrastructure Only
 
 Deploy just the Function App infrastructure for cost analysis functions.
