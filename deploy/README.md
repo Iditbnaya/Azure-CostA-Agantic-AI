@@ -2,6 +2,24 @@
 
 This folder contains ARM JSON templates to deploy the complete Azure infrastructure needed for the Azure Cost Management solution.
 
+## 🚀 **Quick Deploy Links**
+
+### ⚡ Test Latest Changes (Direct from GitHub)
+
+**Simple Function App (No AI Foundry):**
+```
+https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple.json
+```
+
+**Function App with AI Foundry Integration:**
+```
+https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FIditbnaya%2FAzure-CostA-Agantic-AI%2Fmain%2Fdeploy%2Fsimple-with-foundry.json
+```
+
+*Copy and paste these URLs into your browser to test the latest template changes without pushing to Git!*
+
+---
+
 
 ## 🚀 **Deployment Options**
 

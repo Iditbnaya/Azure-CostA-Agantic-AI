@@ -1,18 +1,15 @@
 {
   "functionAppName": {
-    "value": "YOUR-FUNCTION-APP-NAME"
+    "value": "fun-cost-agent-test-foundry-v2"
   },
   "hostingPlanName": {
-    "value": "YOUR-HOSTING-PLAN-NAME"
+    "value": "FLEX-fun-cost-agent-test-foundry-v2"
   },
   "aiHubName": {
-    "value": "YOUR-AI-HUB-NAME"
+    "value": "aihub-cost-test"
   },
   "aiProjectName": {
-    "value": "YOUR-AI-PROJECT-NAME"
-  },
-  "keyVaultName": {
-    "value": "YOUR-KEY-VAULT-NAME"
+    "value": "aiproj-cost-test"
   },
   "environment": {
     "value": "prod"
