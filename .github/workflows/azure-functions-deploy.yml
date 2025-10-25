@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      AZURE_FUNCTIONAPP_NAME: Fun-AzureCost-Testv3  # change if different
+      AZURE_FUNCTIONAPP_NAME: YOUR-ACTUAL-FUNCTION-APP-NAME  # UPDATE THIS WITH YOUR REAL FUNCTION APP NAME
       PYTHON_VERSION: '3.11'
     steps:
       - name: Checkout
