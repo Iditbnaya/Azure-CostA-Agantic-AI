@@ -160,4 +160,6 @@ deployment.zip
 *.azurepubxml
 
 .env.template
-local.settings.json
+local.settings.json--sdk-auth
+azure-sp-credentials.json
+*.sp-credentials.json
