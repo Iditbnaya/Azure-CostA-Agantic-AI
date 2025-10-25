@@ -130,10 +130,10 @@
         "supportsHttpsTrafficOnly": true,
         "minimumTlsVersion": "TLS1_2",
         "allowBlobPublicAccess": false,
-        "allowSharedKeyAccess": false,
+        "allowSharedKeyAccess": true,
         "publicNetworkAccess": "Enabled",
         "allowCrossTenantReplication": false,
-        "defaultToOAuthAuthentication": true,
+        "defaultToOAuthAuthentication": false,
         "networkAcls": {
           "defaultAction": "Allow"
         }
@@ -234,15 +234,6 @@
           ]
         },
         "functionAppConfig": {
-          "deployment": {
-            "storage": {
-              "type": "blobcontainer",
-              "value": "[format('https://{0}.blob.core.windows.net/app-package-{1}-{2}', parameters('storageAccountName'), parameters('functionAppName'), uniqueString(resourceGroup().id))]",
-              "authentication": {
-                "type": "systemassignedidentity"
-              }
-            }
-          },
           "runtime": {
             "name": "[parameters('runtime')]",
             "version": "[parameters('runtimeVersion')]"
@@ -257,7 +248,22 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "        \"[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiProjectName'))]\"\n      ]\n    },\n    {\n      \"type\": \"Microsoft.Authorization/roleAssignments\",\n      \"apiVersion\": \"2022-04-01\",\n      \"name\": \"[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), resourceId('Microsoft.Web/sites', parameters('functionAppName')), 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]\",\n      \"scope\": \"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]\",\n      \"properties\": {\n        \"roleDefinitionId\": \"[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]\",\n        \"principalId\": \"[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'full').identity.principalId]\",\n        \"principalType\": \"ServicePrincipal\"\n      },\n      \"dependsOn\": [\n        \"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]\",\n        \"[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]\"\n      ]\n    }"
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiProjectName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), resourceId('Microsoft.Web/sites', parameters('functionAppName')), 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+      "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
       ]
     }
   ],
