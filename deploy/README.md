@@ -66,13 +66,6 @@ Before deployment, you must provide names for all resources. The templates do no
 - **Storage Account**: Use format `sa<solution><environment><instance>` (e.g., `sacostanalysisprod01`)
 - **AI Services**: Use format `<prefix>-<solution>-<environment>` (e.g., `aihub-costanalysis-prod`)
 
-### Regional Considerations
-
-**Important:** Some Azure services have limited regional availability. For best compatibility:
-- Use **East US**, **West US 2**, or **West Europe** for all services
-- Cognitive Services may not be available in all regions (e.g., Israel Central)
-- The template includes separate location parameters for services with different availability
-
 ### Parameter Files
 
 This repository includes example parameter files:
