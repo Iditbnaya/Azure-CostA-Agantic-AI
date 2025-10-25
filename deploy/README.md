@@ -114,8 +114,6 @@ Includes all basic parameters plus AI Foundry Hub & Project and optional model d
 | `tags` | object | Resource tags |
 
 Notes:
-
-- Cognitive Services and Key Vault are no longer deployed by this template (simplified architecture).
 - To change the model later, update application logic or redeploy with a different `modelName`.
 - If you set `deployModel` to `false`, no model deployment step is executed; you can attach an existing model manually in AI Foundry Studio.
 
