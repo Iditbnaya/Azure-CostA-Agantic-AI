@@ -186,7 +186,6 @@ az deployment group create \
     - Access AI Foundry Studio via Azure portal
     - (Optional) If `deployModel` was true, verify the model placeholder and configure it as needed
     - Configure agent connections between Function App endpoints and AI Project
-    - Review allowed model names: `gpt-41-mini`, `gpt-4o-mini`, `o1-mini`
     - Get Function App Managed Identity ID (if needed):
 
        ```bash
