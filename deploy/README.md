@@ -33,11 +33,9 @@ Deploy Function App infrastructure plus Azure AI Foundry for agent development.
 <img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"/>
 </a>
 
-**Includes:** All Basic Infrastructure + AI Foundry Hub + AI Project + Key Vault
+**Includes:** All Basic Infrastructure + AI Foundry Hub + AI Project
 
-**Note:** Models (GPT-4, GPT-3.5) are available through AI Foundry - no separate Cognitive Services needed!
-
----
+--
 
 ## 📋 **Prerequisites**
 
@@ -57,9 +55,7 @@ Before deployment, you must provide names for all resources. The templates do no
 - **Storage Account Name**: Auto-generated (e.g., `sacostprodabc123def`)
 - **AI Hub Name**: Must be globally unique (e.g., `aihub-costanalysis-yourorg`)
 - **AI Project Name**: Must be unique within the hub (e.g., `aiproj-costanalysis-yourorg`)
-- **Key Vault Name**: Must be globally unique (e.g., `kv-costanalysis-yourorg`)
 
-**Note:** AI models (GPT-4, GPT-3.5) are included in AI Foundry - no separate Cognitive Services required!
 
 ### Naming Convention Guidelines
 - **Function App**: Use format `func-<solution>-<environment>-<instance>` (e.g., `func-costanalysis-prod-01`)
@@ -72,8 +68,7 @@ This repository includes example parameter files:
 - `simple.parameters.json` - Example values for basic infrastructure
 - `simple-with-foundry.parameters.json` - Example values for AI Foundry infrastructure
 
-**⚠️ Important:** Replace all placeholder values (e.g., "YOUR-FUNCTION-APP-NAME") with your actual resource names before deployment.
-
+### Azure Subscription Requirements
 - Azure subscription with appropriate permissions
 - Resource group (will be created if it doesn't exist)
 - Owner or Contributor access to the subscription for RBAC assignments
@@ -99,7 +94,6 @@ Includes all basic parameters plus:
 |-----------|---------------|-------------|
 | `aiHubName` | `aihub-costanalysis-{env}` | Azure AI Foundry Hub name |
 | `aiProjectName` | `aiproj-costanalysis-{env}` | Azure AI Foundry Project name |
-| `keyVaultName` | `kv-costanalysis-{unique}` | Key Vault for secrets |
 | `cognitiveServicesName` | `cscostanalysis{env}` | Cognitive Services account (alphanumeric only) |
 | `cognitiveServicesLocation` | `eastus` | Location for Cognitive Services (must be supported region) |
 
@@ -176,12 +170,3 @@ az deployment group create \
      az functionapp identity show --name [FUNCTION-APP-NAME] --resource-group [RESOURCE-GROUP] --query principalId -o tsv
      ```
 
-## 🔍 **Troubleshooting**
-
-- **Storage account name too long:** Reduce `environment` parameter length
-- **RBAC assignment failures:** Ensure deploying user has Owner/User Access Administrator role
-- **AI Foundry region unavailable:** Check AI services availability in your region
-- **Cognitive Services region error:** Use `cognitiveServicesLocation` parameter to specify a supported region (eastus, westus2, westeurope, etc.)
-- **Cognitive Services name error:** Account name must be alphanumeric only (no hyphens) and 2-64 characters
-- **Template validation errors:** Verify parameter file JSON syntax
-- **Circular dependency errors:** Fixed in current template version - update to latest template
