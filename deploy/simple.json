@@ -11,37 +11,23 @@
   "parameters": {
     "functionAppName": {
       "type": "string",
-      "defaultValue": "fun-cost-agent-working",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the Function App"
       }
     },
     "hostingPlanName": {
       "type": "string",
-      "defaultValue": "[format('FLEX-{0}-{1}', parameters('functionAppName'), uniqueString(resourceGroup().id))]",
+      "defaultValue": "",
       "metadata": {
-        "description": "Name of the Flex Consumption Plan"
+        "description": "Name of the App Service Plan"
       }
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "[format('{0}storage', toLower(replace(resourceGroup().name, '-', '')))]",
+      "defaultValue": "[format('sacost{0}{1}', parameters('environment'), uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Name of the Storage Account"
-      }
-    },
-    "managedIdentityName": {
-      "type": "string",
-      "defaultValue": "[format('{0}-identities-{1}', resourceGroup().name, uniqueString(resourceGroup().id))]",
-      "metadata": {
-        "description": "Name of the User Assigned Managed Identity"
-      }
-    },
-    "appInsightsName": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().name]",
-      "metadata": {
-        "description": "Name of the Application Insights component"
       }
     },
     "environment": {
@@ -74,9 +60,9 @@
     },
     "skuName": {
       "type": "string",
-      "defaultValue": "FC1",
+      "defaultValue": "Y1",
       "metadata": {
-        "description": "Function App SKU (FC1 for Flex Consumption plan)"
+        "description": "App Service Plan SKU"
       }
     },
     "tags": {
@@ -95,25 +81,6 @@
   },
   "resources": [
     {
-      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-      "apiVersion": "2023-01-31",
-      "name": "[parameters('managedIdentityName')]",
-      "location": "[parameters('location')]",
-      "tags": "[parameters('tags')]"
-    },
-    {
-      "type": "microsoft.insights/components",
-      "apiVersion": "2020-02-02",
-      "name": "[parameters('appInsightsName')]",
-      "location": "[parameters('location')]",
-      "tags": "[union(parameters('tags'), createObject('hidden-link: /app-insights-resource-id', format('/subscriptions/{0}/resourceGroups/{1}/providers/microsoft.insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('appInsightsName'))))]",
-      "kind": "web",
-      "properties": {
-        "Application_Type": "web",
-        "Request_Source": "rest"
-      }
-    },
-    {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2023-04-01",
       "name": "[parameters('storageAccountName')]",
@@ -127,10 +94,10 @@
         "supportsHttpsTrafficOnly": true,
         "minimumTlsVersion": "TLS1_2",
         "allowBlobPublicAccess": false,
-        "allowSharedKeyAccess": false,
+        "allowSharedKeyAccess": true,
         "publicNetworkAccess": "Enabled",
         "allowCrossTenantReplication": false,
-        "defaultToOAuthAuthentication": true,
+        "defaultToOAuthAuthentication": false,
         "networkAcls": {
           "defaultAction": "Allow"
         }
@@ -144,7 +111,7 @@
       "tags": "[parameters('tags')]",
       "sku": {
         "name": "[parameters('skuName')]",
-        "tier": "FlexConsumption"
+        "tier": "Dynamic"
       },
       "properties": {
         "reserved": true
@@ -158,66 +125,46 @@
       "tags": "[parameters('tags')]",
       "kind": "functionapp,linux",
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]": {}
-        }
+        "type": "SystemAssigned"
       },
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "reserved": true,
-        "httpsOnly": false,
+        "httpsOnly": true,
         "clientAffinityEnabled": false,
-        "storageAccountRequired": false,
-        "keyVaultReferenceIdentity": "SystemAssigned",
         "siteConfig": {
-          "numberOfWorkers": 1,
-          "alwaysOn": false,
-          "functionAppScaleLimit": 100,
-          "minimumElasticInstanceCount": 0
-        },
-        "functionAppConfig": {
-          "deployment": {
-            "storage": {
-              "type": "blobcontainer",
-              "value": "[format('https://{0}.blob.core.windows.net/app-package-{1}-{2}', parameters('storageAccountName'), parameters('functionAppName'), uniqueString(resourceGroup().id))]",
-              "authentication": {
-                "type": "userassignedidentity",
-                "userAssignedIdentityResourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
-              }
+          "linuxFxVersion": "[format('{0}|{1}', toUpper(parameters('runtime')), parameters('runtimeVersion'))]",
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-04-01').keys[0].value)]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~4"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "[parameters('runtime')]"
+            },
+            {
+              "name": "WEBSITE_PYTHON_DEFAULT_VERSION",
+              "value": "[parameters('runtimeVersion')]"
+            },
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "true"
+            },
+            {
+              "name": "ENABLE_ORYX_BUILD",
+              "value": "true"
             }
-          },
-          "runtime": {
-            "name": "[parameters('runtime')]",
-            "version": "[parameters('runtimeVersion')]"
-          },
-          "scaleAndConcurrency": {
-            "alwaysReady": [],
-            "maximumInstanceCount": 100,
-            "instanceMemoryMB": 2048
-          }
+          ]
         }
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]",
-        "[resourceId('microsoft.insights/components', parameters('appInsightsName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2022-04-01",
-      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
-      "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-      "properties": {
-        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
-        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2023-01-31').principalId]",
-        "principalType": "ServicePrincipal"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
       ]
     }
   ],
@@ -243,29 +190,15 @@
       },
       "value": "[parameters('storageAccountName')]"
     },
-    "managedIdentityName": {
-      "type": "string",
-      "metadata": {
-        "description": "User Assigned Managed Identity Name"
-      },
-      "value": "[parameters('managedIdentityName')]"
-    },
-    "managedIdentityPrincipalId": {
-      "type": "string",
-      "metadata": {
-        "description": "Managed Identity Principal ID"
-      },
-      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2023-01-31').principalId]"
-    },
     "postDeploymentInstructions": {
       "type": "object",
       "metadata": {
         "description": "Instructions for completing the deployment"
       },
       "value": {
-        "step1": "Deploy function code using VS Code Azure Functions extension or: func azure functionapp publish [functionAppName]",
-        "step2": "The Function App uses Flex Consumption plan with user-assigned managed identity for blob storage authentication",
-        "step3": "No storage keys required - authentication is handled via managed identity",
+        "step1": "Deploy function code: func azure functionapp publish [functionAppName]",
+        "step2": "Get Function App Principal ID: az functionapp identity show --name [functionAppName] --resource-group [resourceGroup] --query principalId -o tsv",
+        "step3": "Configure any additional RBAC permissions if needed",
         "functionEndpoints": {
           "analyze": "[format('https://{0}.azurewebsites.net/api/analyze', parameters('functionAppName'))]",
           "costAnalysis": "[format('https://{0}.azurewebsites.net/api/cost-analysis', parameters('functionAppName'))]",

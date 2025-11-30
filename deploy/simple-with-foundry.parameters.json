@@ -1,21 +1,24 @@
 {
   "functionAppName": {
-    "value": "fun-cost-agent-test-foundry-v2"
+    "value": "YOUR-FUNCTION-APP-NAME"
   },
   "hostingPlanName": {
-    "value": "FLEX-fun-cost-agent-test-foundry-v2"
+    "value": "YOUR-HOSTING-PLAN-NAME"
   },
   "aiHubName": {
-    "value": "aihub-cost-test"
+    "value": "YOUR-AI-HUB-NAME"
   },
   "aiProjectName": {
-    "value": "aiproj-cost-test"
+    "value": "YOUR-AI-PROJECT-NAME"
+  },
+  "keyVaultName": {
+    "value": "YOUR-KEY-VAULT-NAME"
   },
   "environment": {
     "value": "prod"
   },
   "location": {
-    "value": "Sweden Central"
+    "value": "East US"
   },
   "runtime": {
     "value": "python"
@@ -24,7 +27,7 @@
     "value": "3.11"
   },
   "skuName": {
-    "value": "FC1"
+    "value": "Y1"
   },
   "deployModel": {
     "value": true
