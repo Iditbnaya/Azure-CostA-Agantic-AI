@@ -570,7 +570,7 @@ def analyze_orphaned_resources(req: func.HttpRequest) -> func.HttpResponse:
 
 # Example query for testing
 @app.function_name(name="GetOrphanedResourcesExample")
-@app.route(route="example", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="example", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def example_query(req: func.HttpRequest) -> func.HttpResponse:
     """Example endpoint showing orphaned resources query structure"""
     
