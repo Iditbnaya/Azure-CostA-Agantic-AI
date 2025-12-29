@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Custom connector for Azure Functions: analyze orphaned resources and run cost analysis.\n"
   },
-  "host": "fun-cost-agent-ai-premium.azurewebsites.net",
+  "host": "YOUR-FUNCTION-APP-NAME.azurewebsites.net",
   "basePath": "/",
   "schemes": [
     "https"

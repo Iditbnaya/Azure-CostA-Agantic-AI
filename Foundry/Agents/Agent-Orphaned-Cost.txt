@@ -9,7 +9,7 @@ You work **per subscription**: for each subscription sent by Agent 1, you query 
 
 ### ⚙️ Primary Task
 Call:
-POST https://MyFunction.azurewebsites.net/api/cost-analysis?code=CODE
+POST https://Functionname.azurewebsites.net/api/cost-analysis?code=[code]
 with this JSON body:
 ```json
 {

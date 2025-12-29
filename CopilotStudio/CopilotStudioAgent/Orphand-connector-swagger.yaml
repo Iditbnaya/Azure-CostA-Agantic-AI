@@ -5,7 +5,7 @@ info:
   description: >-
     Custom connector for Azure Functions: analyze orphaned resources and
     recommendations.
-host: fun-cost-agent-amdocs-test.azurewebsites.net
+host: YOUR-FUNCTION-APP-NAME.azurewebsites.net
 basePath: /
 schemes:
   - https

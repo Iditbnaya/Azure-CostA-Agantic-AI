@@ -1,6 +1,70 @@
-# Azure Cost Management & Orphaned Resources Analyzer
+# Azure Cost Optimization Agent
 
-A comprehensive Azure Functions application that provides cost analysis and orphaned resource detection across Azure subscriptions. This application integrates with Azure AI Foundry agents to provide intelligent resource management and cost optimization recommendations.
+An intelligent Azure Functions application for identifying orphaned resources and analyzing Azure costs. This solution helps organizations optimize cloud spending through automated resource detection and cost analysis.
+
+## 🏗️ Repository Structure
+
+This repository contains a **shared Azure Functions backend** (root directory) with **two agent deployment options** in separate folders:
+
+```
+Azure-CostA-Agantic-AI/
+├── function_app.py          # Shared Azure Functions backend API
+├── host.json
+├── requirements.txt
+├── README.md                # This file - Backend documentation
+├── Foundry/                 # Azure AI Foundry agent deployment
+│   ├── Agents/              # Agent configuration files
+│   └── mcp/                 # Model Context Protocol setup
+└── CopilotStudio/           # Microsoft Copilot Studio deployment
+    ├── CopilotStudioAgent/  # Custom connector configs
+    └── README.md            # Copilot Studio setup guide
+```
+
+## 📦 Agent Deployment Options
+
+Choose your agent deployment based on your use case:
+
+### 1️⃣ Azure AI Foundry (`/Foundry` folder)
+**Best for**: Testing, development, and Model Context Protocol (MCP) deployment
+
+- Full AI agent orchestration with Azure AI Foundry
+- Multi-agent conversation support
+- MCP server integration for development tools (VS Code, etc.)
+- Advanced testing and debugging capabilities
+- **Documentation**: See `/Foundry` folder
+- **Setup**: Agent configuration files and MCP setup
+
+### 2️⃣ Microsoft Copilot Studio (`/CopilotStudio` folder)
+**Best for**: Production chatbot integration with low-code/no-code tools
+
+- Pre-built custom connectors for Copilot Studio
+- Drop-in integration with existing bots
+- Visual bot builder interface
+- No AI Foundry infrastructure required
+- **Documentation**: [CopilotStudio/README.md](./CopilotStudio/README.md)
+- **Setup**: Swagger files and agent instructions
+
+### 🤔 Which Option Should You Choose?
+
+| Use Case | Recommended Option |
+|----------|-------------------|
+| Local development and testing | **Azure AI Foundry** |
+| MCP integration with VS Code/IDEs | **Azure AI Foundry** |
+| Advanced AI agent orchestration | **Azure AI Foundry** |
+| Production Copilot Studio bots | **Copilot Studio** |
+| Deploy Agent to webchatbots and business applications | **Copilot Studio** |
+| Low-code chatbot integration | **Copilot Studio** |
+| Direct REST API access | **Copilot Studio** |
+
+**Both options use the same Azure Functions backend** with identical core functionality: orphaned resource detection, cost analysis, Azure Advisor recommendations, and tenant-wide scanning.
+
+---
+
+## 🚀 Azure Functions Backend Documentation
+
+> **Note**: This README documents the **shared Azure Functions backend** deployed from the root directory. For agent-specific setup:
+> - **Azure AI Foundry**: See `/Foundry` folder for agent configuration and MCP setup
+> - **Copilot Studio**: See [CopilotStudio/README.md](./CopilotStudio/README.md) for custom connector setup
 
 ## ⚠️ **IMPORTANT SECURITY DISCLAIMER**
 

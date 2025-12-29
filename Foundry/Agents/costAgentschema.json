@@ -1,0 +1,155 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Azure Cost Analysis API",
+    "description": "Azure Function API for analyzing Azure resource costs.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://functionname.azurewebsites.net/api",
+      "description": "Azure Function App endpoint"
+    }
+  ],
+  "paths": {
+    "/cost-analysis": {
+      "post": {
+        "summary": "Run direct cost analysis",
+        "description": "Queries Azure Cost Management API for specific resources, subscriptions, or resource groups.",
+        "operationId": "CostAnalysisDirectQuery",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "subscription_id",
+                  "query_type",
+                  "start_date",
+                  "end_date"
+                ],
+                "properties": {
+                  "subscription_id": {
+                    "type": "string",
+                    "description": "Azure subscription ID. Use: e4303b68-1de0-4a9d-ad35-5c3eb13c05e7",
+                    "example": "e4303b68-1de0-4a9d-ad35-5c3eb13c05e7"
+                  },
+                  "query_type": {
+                    "type": "string",
+                    "enum": [
+                      "subscription",
+                      "resource_group",
+                      "service",
+                      "top_resources",
+                      "budget",
+                      "location",
+                      "specific_resources"
+                    ],
+                    "description": "Type of cost analysis query to run"
+                  },
+                  "resource_group": {
+                    "type": "string",
+                    "description": "For resource_group query type"
+                  },
+                  "service_names": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "For service query type"
+                  },
+                  "resource_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "For specific_resources query type. Full Azure resource IDs."
+                  },
+                  "top_n": {
+                    "type": "integer",
+                    "description": "Number of top resources to return (for top_resources)"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Start date for cost query (interpreted relative to the current year when natural-language dates like 'last month' are used; must be in ISO 8601 format)",
+                    "example": "2025-11-01T00:00:00Z"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "End date for cost query",
+                    "example": "2025-11-30T23:59:59Z"
+                  },
+                  "granularity": {
+                    "type": "string",
+                    "enum": [
+                      "Daily",
+                      "Monthly",
+                      "None"
+                    ],
+                    "default": "Daily",
+                    "description": "Cost data granularity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful cost analysis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subscription_id": {
+                      "type": "string"
+                    },
+                    "analysis_type": {
+                      "type": "string"
+                    },
+                    "total_cost": {
+                      "type": "number"
+                    },
+                    "currency": {
+                      "type": "string"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "cost": {
+                            "type": "number"
+                          },
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid authentication"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

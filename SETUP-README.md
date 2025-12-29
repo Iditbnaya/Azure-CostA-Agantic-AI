@@ -2,142 +2,117 @@
 
 This folder contains everything you need to deploy the Azure Cost Management & Orphaned Resources Analyzer solution.
 
-## 📁 Files Overview
+## 📁 Setup Documentation
 
 | File | Purpose |
 |------|---------|
-| `INSTRUCTIONS.md` | **Complete step-by-step manual setup guide** |
-| `setup.ps1` | **Automated PowerShell deployment script** |
-| `README.md` | This quick setup guide |
+| **[SETUP-FUNCTIONS.md](SETUP-FUNCTIONS.md)** | **Azure Functions deployment guide** (infrastructure + backend) |
+| **[SETUP-FOUNDRY.md](SETUP-FOUNDRY.md)** | **Azure AI Foundry agent deployment guide** |
+| `setup.ps1` | Automated PowerShell deployment script for Functions |
+| `SETUP-README.md` | This overview guide |
+| `README.md` | Project overview and documentation |
 
-## ⚡ Quick Start (Automated)
+## 🎯 Deployment Path
+
+The solution has two main components that should be deployed in order:
+
+### 1️⃣ Azure Functions Backend
+Deploy the backend infrastructure and API endpoints first.
+
+👉 **[Follow SETUP-FUNCTIONS.md](SETUP-FUNCTIONS.md)** for complete instructions
+
+### 2️⃣ Azure AI Foundry Agents
+Configure intelligent agents after the backend is deployed.
+
+👉 **[Follow SETUP-FOUNDRY.md](SETUP-FOUNDRY.md)** for complete instructions
+
+## ⚡ Quick Start
 
 ### Prerequisites
-- Azure CLI installed and logged in
-- PowerShell 5.1 or PowerShell Core
-- Python 3.11 installed
-- Azure Functions Core Tools v4
 
-### Run Automated Setup
+- [ ] Azure CLI installed and logged in
+- [ ] PowerShell 5.1 or PowerShell Core  
+- [ ] Python 3.11 installed
+- [ ] Azure Functions Core Tools v4
+- [ ] Access to Azure AI Foundry (for agent deployment)
+
+### Deployment Steps
+
+#### Step 1: Deploy Azure Functions Backend ⚡
+
 ```powershell
-# Clone and navigate to repository
-git clone https://github.com/iditbnaya_microsoft/CostAgents.git
-cd CostAgents
+# Navigate to repository
+cd Azure-CostA-Agantic-AI
 
-# Run automated setup (replace with your resource group name)
-.\setup.ps1 -ResourceGroupName "rg-cost-analyzer-prod"
-
-# Optional: Specify location
+# Run automated Functions deployment
 .\setup.ps1 -ResourceGroupName "rg-cost-analyzer-prod" -Location "eastus2"
 ```
 
-### What the Script Does
-- ✅ Validates all prerequisites
-- ✅ Creates Azure Resource Group
-- ✅ Creates Storage Account
-- ✅ Creates Premium Function App with Python 3.11
-- ✅ Configures Managed Identity
-- ✅ Assigns all required permissions
-- ✅ Deploys function code (if available)
-- ✅ Sets up Application Insights
-- ✅ Retrieves function keys
-- ✅ Provides next steps guidance
+**What gets deployed:**
+- ✅ Azure Resource Group
+- ✅ Storage Account
+- ✅ Function App with Python 3.11
+- ✅ Application Insights
+- ✅ Managed Identity with RBAC permissions
+- ✅ Function code deployment
 
-## 📖 Manual Setup
+For detailed instructions, see **[SETUP-FUNCTIONS.md](SETUP-FUNCTIONS.md)**
 
-For detailed control or troubleshooting, use the comprehensive manual guide:
+#### Step 2: Configure AI Foundry Agents 🤖
 
-👉 **[Open INSTRUCTIONS.md](INSTRUCTIONS.md)** for complete step-by-step instructions
+After the Functions deployment completes:
 
-The manual guide includes:
-- Detailed prerequisites validation
-- Security configuration setup
-- Step-by-step Azure resource creation
-- AI Foundry configuration
-- Testing and validation procedures
-- Monitoring setup
-- Troubleshooting guide
-- Best practices
+1. Collect Function App URL and Master Key
+2. Update agent configuration files with your deployment details
+3. Deploy agents in Azure AI Foundry
 
-## 🔒 Security Setup
-
-**Important**: After infrastructure deployment, set up the security pipeline:
-
-```powershell
-# Install pre-commit hooks
-pip install pre-commit
-pre-commit install
-
-# Test security pipeline
-pre-commit run --all-files
-```
-
-Configure GitHub branch protection rules to require security checks.
-
-## 🤖 AI Foundry Configuration
-
-After deployment, update the agent configuration files:
-
-1. **Update `Agents/Agent-OrphanedResources.txt`**:
-   - Replace `YOUR-FUNCTION-APP-NAME` with your function app name
-   - Replace `YOUR-FUNCTION-KEY` with your master key
-
-2. **Update `Agents/Agent-Orphaned-Cost.txt`**:
-   - Replace `YOUR-FUNCTION-APP-NAME` with your function app name
-   - Replace `YOUR-FUNCTION-KEY` with your master key
-
-3. **Deploy agents in Azure AI Foundry Studio**
-
-## 🧪 Testing Your Deployment
-
-```powershell
-# Test example endpoints (no authentication)
-$functionAppName = "your-function-app-name"
-Invoke-RestMethod -Uri "https://$functionAppName.azurewebsites.net/api/orphaned-resources-example"
-Invoke-RestMethod -Uri "https://$functionAppName.azurewebsites.net/api/cost-example"
-
-# Test authenticated endpoints
-$masterKey = "your-master-key"
-$subscriptionId = "your-subscription-id"
-
-$payload = @{
-    subscription_id = $subscriptionId
-    resource_types = @("PublicIPAddresses", "NetworkInterfaces")
-} | ConvertTo-Json
-
-Invoke-RestMethod -Uri "https://$functionAppName.azurewebsites.net/api/orphaned-resources?code=$masterKey" -Method POST -Body $payload -ContentType "application/json"
-```
-
-## 🆘 Need Help?
-
-- **Automated Setup Issues**: Check PowerShell execution policy and Azure permissions
-- **Manual Setup**: Follow the detailed INSTRUCTIONS.md guide
-- **Security Pipeline**: Review `.github/workflows/secret-scan.yml` configuration
-- **AI Foundry**: Ensure agent configurations match your deployment details
+For detailed instructions, see **[SETUP-FOUNDRY.md](SETUP-FOUNDRY.md)**
 
 ## 📊 What You Get
 
-After successful deployment:
-
-- **Secure Function App** with 7-tool security pipeline
+### Azure Functions Backend
 - **Four API endpoints** for cost analysis and orphaned resource detection
 - **Managed Identity** with least-privilege permissions
 - **Application Insights** monitoring and logging
-- **AI Foundry agents** for intelligent cost optimization
-- **Complete documentation** and best practices
+- **Secure authentication** with function keys
 
-## 🎯 Next Steps
+### AI Foundry Agents
+- **Orphaned Resources Analyzer** - Intelligent resource waste detection
+- **Cost Analysis Agent** - Smart cost insights and recommendations
+- **Multi-agent workflows** - Coordinated analysis capabilities
+- **Natural language interface** - Easy-to-use conversational agents
 
-1. **Test all endpoints** to verify functionality
-2. **Configure AI Foundry agents** with your deployment details
-3. **Set up monitoring alerts** in Azure Monitor
-4. **Train your team** on using the solution
-5. **Implement regular maintenance** procedures
+## 🆘 Need Help?
+
+### Functions Deployment Issues
+- Check PowerShell execution policy
+- Verify Azure CLI login and permissions
+- Review [SETUP-FUNCTIONS.md](SETUP-FUNCTIONS.md) troubleshooting section
+
+### AI Foundry Configuration Issues  
+- Verify Function App is running
+- Confirm function keys are correct
+- Review [SETUP-FOUNDRY.md](SETUP-FOUNDRY.md) troubleshooting section
+
+### Additional Resources
+- **[README.md](README.md)** - Project overview
+- **[functiondeploymentcommands.md](functiondeploymentcommands.md)** - Command reference
+- **[WORKING_COMMANDS.md](WORKING_COMMANDS.md)** - Verified commands
+
+## 🎯 Next Steps After Deployment
+
+- [ ] Test all function endpoints
+- [ ] Verify agents in AI Foundry Playground
+- [ ] Set up monitoring alerts in Azure Monitor
+- [ ] Configure scheduled agent runs
+- [ ] Train your team on using the solution
+- [ ] Review security best practices
 
 ---
 
-**Choose Your Path**:
-- 🚀 **Quick & Automated**: Run `setup.ps1`
-- 📖 **Detailed & Manual**: Follow `INSTRUCTIONS.md`
+## 🚀 Ready to Deploy?
 
-Both paths lead to the same fully functional solution! 🎉
+1. **Start here**: [SETUP-FUNCTIONS.md](SETUP-FUNCTIONS.md) - Deploy backend infrastructure
+2. **Then continue**: [SETUP-FOUNDRY.md](SETUP-FOUNDRY.md) - Configure AI agents
+
+Both guides provide automated and manual deployment options! ✨

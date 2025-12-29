@@ -6,10 +6,10 @@ param(
     [string]$ResourceGroupName,
     
     [Parameter(Mandatory=$false)]
-    [string]$Location = "eastus2",
+    [string]$Location = "swedencentral",
     
     [Parameter(Mandatory=$false)]
-    [string]$FunctionAppPrefix = "func-cost-analyzer"
+    [string]$FunctionAppPrefix = "func-cost-analyzer-ai"
 )
 
 # Script configuration
@@ -124,7 +124,7 @@ function Deploy-Solution {
     
     # Create Function App
     Write-Host "🔧 Creating Function App..." -ForegroundColor Yellow
-    az functionapp create `
+    $createResult = az functionapp create `
         --resource-group $rgName `
         --plan $appServicePlan `
         --name $functionAppName `
@@ -133,17 +133,42 @@ function Deploy-Solution {
         --runtime-version 3.11 `
         --os-type Linux `
         --assign-identity `
-        --output none
+        --functions-version 4 2>&1
+    
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to create Function App. Error: $createResult"
+        throw "Function App creation failed"
+    }
+    
     Write-Host "   ✓ Function App created with Managed Identity" -ForegroundColor Green
+    
+    # Wait for function app to be fully provisioned
+    Write-Host "   ⏳ Waiting for Function App to be ready..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 30
     
     # Get Managed Identity Principal ID
     Write-Host "🆔 Configuring Managed Identity permissions..." -ForegroundColor Yellow
-    $principalId = az functionapp identity show `
-        --name $functionAppName `
-        --resource-group $rgName `
-        --query principalId -o tsv
     
-    # Assign storage permissions
+    # Retry logic for getting principal ID (can take time to propagate)
+    $retryCount = 0
+    $maxRetries = 5
+    $principalId = $null
+    
+    while ($retryCount -lt $maxRetries -and [string]::IsNullOrEmpty($principalId)) {
+        $principalId = az functionapp identity show --name $functionAppName --resource-group $rgName `
+            --query principalId -o tsv 2>$null
+        
+        if ([string]::IsNullOrEmpty($principalId)) {
+            $retryCount++
+            Write-Host "   ⏳ Waiting for Managed Identity to be ready (attempt $retryCount/$maxRetries)..." -ForegroundColor Yellow
+            Start-Sleep -Seconds 10
+        }
+    }
+    
+    if ([string]::IsNullOrEmpty($principalId)) {
+        Write-Error "Failed to retrieve Managed Identity Principal ID after $maxRetries attempts"
+        throw "Managed Identity configuration failed"
+    }
     $storageScope = "/subscriptions/$subscriptionId/resourceGroups/$rgName/providers/Microsoft.Storage/storageAccounts/$storageAccountName"
     az role assignment create `
         --assignee $principalId `
@@ -179,34 +204,61 @@ function Deploy-Solution {
     az functionapp config appsettings set `
         --name $functionAppName `
         --resource-group $rgName `
-        --settings "ENVIRONMENT=production" "AZURE_CLIENT_ID=$principalId" `
+        --settings `
+            "ENVIRONMENT=production" `
+            "AZURE_CLIENT_ID=$principalId" `
+            "ENABLE_ORYX_BUILD=true" `
+            "SCM_DO_BUILD_DURING_DEPLOYMENT=true" `
+            "PYTHON_ENABLE_WORKER_EXTENSIONS=1" `
         --output none
     Write-Host "   ✓ Application settings configured" -ForegroundColor Green
     
     # Deploy function code (if in project directory)
     if (Test-Path "function_app.py") {
         Write-Host "📦 Deploying function code..." -ForegroundColor Yellow
-        func azure functionapp publish $functionAppName --python --output none
-        Write-Host "   ✓ Function code deployed" -ForegroundColor Green
+        Write-Host "   This may take 2-3 minutes..." -ForegroundColor Yellow
+        
+        $deployOutput = func azure functionapp publish $functionAppName --python 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "   ✓ Function code deployed successfully" -ForegroundColor Green
+        }
+        else {
+            Write-Host "   ⚠️  Function deployment encountered an error" -ForegroundColor Yellow
+            Write-Host "   Error details: $deployOutput" -ForegroundColor Red
+            Write-Host "   💡 You can deploy manually with: func azure functionapp publish $functionAppName" -ForegroundColor Cyan
+        }
     } else {
-        Write-Host "   ⚠️  function_app.py not found in current directory. Please deploy manually." -ForegroundColor Yellow
+        Write-Host "   ⚠️  function_app.py not found in current directory. Skipping code deployment." -ForegroundColor Yellow
+        Write-Host "   💡 Navigate to the project directory and run: func azure functionapp publish $functionAppName" -ForegroundColor Cyan
     }
     
     # Get function keys
     Write-Host "🔑 Retrieving function keys..." -ForegroundColor Yellow
-    Start-Sleep -Seconds 10  # Wait for function app to be fully ready
     
-    try {
+    # Retry logic for getting function keys (can take time after deployment)
+    $retryCount = 0
+    $maxRetries = 3
+    $masterKey = $null
+    
+    while ($retryCount -lt $maxRetries -and [string]::IsNullOrEmpty($masterKey)) {
+        Start-Sleep -Seconds 10
         $masterKey = az functionapp keys list `
             --name $functionAppName `
             --resource-group $rgName `
-            --query "masterKey" -o tsv
+            --query "masterKey" -o tsv 2>$null
         
-        Write-Host "   ✓ Function keys retrieved" -ForegroundColor Green
+        if ([string]::IsNullOrEmpty($masterKey)) {
+            $retryCount++
+            Write-Host "   ⏳ Waiting for function keys to be available (attempt $retryCount/$maxRetries)..." -ForegroundColor Yellow
+        }
     }
-    catch {
+    
+    if ([string]::IsNullOrEmpty($masterKey)) {
         Write-Host "   ⚠️  Could not retrieve function keys automatically. Get them from Azure Portal." -ForegroundColor Yellow
         $masterKey = "GET_FROM_PORTAL"
+    } else {
+        Write-Host "   ✓ Function keys retrieved" -ForegroundColor Green
     }
     
     # Create Application Insights

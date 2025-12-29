@@ -1,8 +1,10 @@
-# Azure Cost Optimization Agent - Copilot Studio Version
+# Azure Cost Optimization Agent - Copilot Studio Setup
 
-> **💡 Note**: This is the **Microsoft Copilot Studio** version of the Azure Cost Optimization Agent. For the **Azure AI Foundry** version with AI agent orchestration, see the [main repository README](../README.md).
+> **💡 Note**: This folder contains the **Microsoft Copilot Studio** agent deployment configuration. The Azure Functions backend is deployed from the **root directory**. For the **Azure AI Foundry** agent deployment, see the `/Foundry` folder.
 
-An intelligent Azure Functions-based API for identifying orphaned resources and analyzing Azure costs, designed to integrate with Microsoft Copilot Studio AI agents for conversational FinOps and cloud cost optimization.
+## Overview
+
+This guide explains how to integrate the Azure Cost Optimization Agent (deployed from the root directory) with Microsoft Copilot Studio using custom connectors. The backend Azure Functions API provides endpoints for identifying orphaned resources and analyzing Azure costs.
 
 ## 🎯 Purpose
 
@@ -94,59 +96,28 @@ Assign these roles to the Function App's Managed Identity at the appropriate sco
 | **Advisor Recommendations Reader** | Retrieve Azure Advisor recommendations |
 
 
-## 📦 Installation
+## 📦 Prerequisites
 
-### 1. Clone the Repository
+### 1. Deploy Azure Functions Backend
+
+The Azure Functions backend must be deployed from the **root directory** first:
 
 ```bash
+# Clone the repository
 git clone <repository-url>
-cd CopilotStudio
-```
+cd Azure-CostA-Agantic-AI
 
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Configure Local Settings (Development)
-
-Copy the template and configure your local settings:
-
-```bash
-# Copy the template file
-cp local.settings.json.template local.settings.json
-
-# Edit with your Azure Storage connection (or use local emulator)
-```
-
-For local development, you can use the Azure Storage Emulator:
-
-```json
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "python",
-    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing"
-  }
-}
-```
-
-> ⚠️ **Security Note**: `local.settings.json` is git-ignored and should never be committed. Use `local.settings.json.template` for documentation.
-```
-
-### 4. Deploy to Azure
-
-```bash
-# Login to Azure
+# Deploy to Azure
 az login
-
-# Deploy the function app
 func azure functionapp publish <your-function-app-name>
 ```
 
-### 5. Configure Managed Identity
+For detailed backend deployment instructions, see the [main README](../README.md).
+
+### 2. Configure Managed Identity
 
 ```bash
 # Enable system-assigned managed identity
@@ -656,17 +627,21 @@ vm-name
 ### Project Structure
 
 ```
-CopilotStudio/
-├── function_app.py              # Main Azure Functions app with API endpoints
-├── host.json                    # Function app host configuration
-├── local.settings.json          # Local development settings
-├── requirements.txt             # Python dependencies
-├── README.md                    # This file
-└── CopilotStudioAgent/          # Copilot Studio connector files
-    ├── Cost-Connector swagger.yaml        # Full API OpenAPI specification
-    ├── Orphand connector swagger.yaml     # Orphaned resources only API spec
-    ├── AgentInstractions.txt              # Agent behavior instructions
-    └── image.png                          # Agent icon/logo
+Azure-CostA-Agantic-AI/
+├── function_app.py              # Azure Functions backend (deploy from root)
+├── host.json
+├── requirements.txt
+├── README.md                    # Backend documentation
+├── Foundry/                     # Azure AI Foundry agent deployment
+│   ├── Agents/
+│   └── mcp/
+└── CopilotStudio/               # This folder - Copilot Studio setup
+    ├── README.md                # This file
+    └── CopilotStudioAgent/      # Custom connector configuration
+        ├── Cost-Connector swagger.yaml        # Full API OpenAPI spec
+        ├── Orphand connector swagger.yaml     # Orphaned resources only
+        ├── AgentInstractions.txt              # Agent behavior guide
+        └── image.png                          # Connector icon
 ```
 
 ### Key Classes
