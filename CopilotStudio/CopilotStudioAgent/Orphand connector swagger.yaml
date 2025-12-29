@@ -1,0 +1,220 @@
+swagger: '2.0'
+info:
+  title: Orphaned Resources Analyzer API
+  version: 1.0.0
+  description: >-
+    Custom connector for Azure Functions: analyze orphaned resources and
+    recommendations.
+host: fun-cost-agent-amdocs-test.azurewebsites.net
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /api/analyze:
+    post:
+      operationId: AnalyzeOrphanedResources
+      summary: Analyze orphaned resources and recommendations
+      description: >-
+        Returns tenant-wide or subscription-scoped analysis of orphaned
+        resources and cost-related recommendations.
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/AnalyzeRequest'
+      responses:
+        '200':
+          description: Analysis results
+          schema:
+            $ref: '#/definitions/AnalyzeResponse'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  AnalyzeRequest:
+    type: object
+    additionalProperties: false
+    properties:
+      analysis_scope:
+        type: string
+        enum:
+          - tenant_wide
+          - subscription_list
+          - single_subscription
+          - tenant
+      subscription_ids:
+        type: array
+        items:
+          type: string
+      resource_types:
+        type: array
+        items:
+          type: string
+      include_advisor_recommendations:
+        type: boolean
+      include_costs:
+        type: boolean
+      start_date:
+        type: string
+      end_date:
+        type: string
+
+  AnalyzeResponse:
+    type: object
+    required:
+      - analysis_date
+      - resources
+      - subscriptions_analyzed
+      - summary
+    properties:
+      analysis_date:
+        type: string
+      resources:
+        type: array
+        items:
+          $ref: '#/definitions/ResourceItem'
+      subscriptions_analyzed:
+        type: array
+        items:
+          $ref: '#/definitions/SubscriptionAnalysis'
+      analysis_scope:
+        type: string
+      total_subscriptions:
+        type: integer
+        format: int32
+      successful_subscriptions:
+        type: integer
+        format: int32
+      summary:
+        $ref: '#/definitions/AnalysisSummary'
+
+  ResourceItem:
+    type: object
+    required:
+      - resource_type
+      - name
+      - subscription_name
+    properties:
+      resource_type:
+        type: string
+      resource_id:
+        type: string
+      recommendation_id:
+        type: string
+      name:
+        type: string
+      location:
+        type: string
+      resource_group:
+        type: string
+      subscription_id:
+        type: string
+        title: ''
+      subscription_name:
+        type: string
+      tags:
+        type: object
+      sku:
+        type: string
+      allocation_method:
+        type: string
+      disk_size_gb:
+        type: integer
+        format: int32
+      age_days:
+        type: integer
+        format: int32
+      created_date:
+        type: string
+      vm_size:
+        type: string
+      os_type:
+        type: string
+      os_info:
+        type: string
+      category:
+        type: string
+      impact:
+        type: string
+      risk:
+        type: string
+      short_description:
+        type: string
+      solution:
+        type: string
+      impacted_resource:
+        type: string
+      potential_savings:
+        type: number
+        format: double
+      last_updated:
+        type: string
+
+  SubscriptionAnalysis:
+    type: object
+    required:
+      - subscription_name
+      - resources_found
+    properties:
+      subscription_id:
+        type: string
+        title: ''
+      subscription_name:
+        type: string
+      resources_found:
+        type: integer
+        format: int32
+
+  AnalysisSummary:
+    type: object
+    required:
+      - total_resources
+      - by_type
+      - total_potential_savings
+    properties:
+      total_resources:
+        type: integer
+        format: int32
+      by_type:
+        type: object
+        additionalProperties:
+          type: integer
+          format: int32
+      total_potential_savings:
+        type: number
+        format: double
+
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      details:
+        type: object
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    in: query
+    name: code
+
+security:
+  - api_key: []
