@@ -227,3 +227,4 @@ config.local.json
 
 deployment-summary-*.txt
 functiondeploymentcommands.txt
+WORKING_COMMANDS.md
